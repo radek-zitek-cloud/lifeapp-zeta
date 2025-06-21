@@ -19,8 +19,8 @@
           <template v-slot:append>
             <v-text-field
               v-model.number="maxDataPoints"
-              :min="200"
-              :max="1000"
+              :min="50"
+              :max="5000"
               type="number"
               style="width: 96px"
               density="compact"
