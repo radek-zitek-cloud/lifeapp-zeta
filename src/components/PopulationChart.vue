@@ -7,9 +7,9 @@
       <div class="d-flex align-center" style="width: 500px;">
         <v-slider
           v-model="maxDataPoints"
-          :min="50"
-          :max="5000"
-          :step="50"
+          :min="DATA_POINTS_MIN"
+          :max="DATA_POINTS_MAX"
+          :step="DATA_POINTS_STEP"
           color="primary"
           label="Max Generations"
           density="compact"
@@ -19,8 +19,8 @@
           <template v-slot:append>
             <v-text-field
               v-model.number="maxDataPoints"
-              :min="50"
-              :max="5000"
+              :min="DATA_POINTS_MIN"
+              :max="DATA_POINTS_MAX"
               type="number"
               style="width: 96px"
               density="compact"
@@ -82,6 +82,11 @@ import {
   Filler
 } from 'chart.js'
 import { Line } from 'vue-chartjs'
+
+// Slider configuration constants
+const DATA_POINTS_MIN = 50
+const DATA_POINTS_MAX = 5000
+const DATA_POINTS_STEP = 50
 
 ChartJS.register(
   CategoryScale,
