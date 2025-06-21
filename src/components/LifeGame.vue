@@ -49,9 +49,9 @@
           <v-col cols="12" sm="6" md="4">
             <v-slider
               v-model="speed"
-              :min="50"
-              :max="1000"
-              :step="50"
+              :min="SPEED_MIN"
+              :max="SPEED_MAX"
+              :step="SPEED_STEP"
               label="Speed (ms)"
               thumb-label
               prepend-icon="mdi-speedometer"
@@ -73,9 +73,9 @@
           <v-col cols="12" sm="6" md="4">
             <v-slider
               v-model="gridWidth"
-              :min="10"
-              :max="128"
-              :step="1"
+              :min="GRID_MIN"
+              :max="GRID_MAX"
+              :step="GRID_STEP"
               label="Grid Width"
               thumb-label
               prepend-icon="mdi-resize-horizontal"
@@ -86,9 +86,9 @@
           <v-col cols="12" sm="6" md="4">
             <v-slider
               v-model="gridHeight"
-              :min="10"
-              :max="128"
-              :step="1"
+              :min="GRID_MIN"
+              :max="GRID_MAX"
+              :step="GRID_STEP"
               label="Grid Height"
               thumb-label
               prepend-icon="mdi-resize-vertical"
@@ -132,6 +132,15 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import PopulationChart from './PopulationChart.vue'
+
+// Slider configuration constants
+const SPEED_MIN = 50
+const SPEED_MAX = 1000
+const SPEED_STEP = 50
+
+const GRID_MIN = 10
+const GRID_MAX = 128
+const GRID_STEP = 1
 
 // Game state
 const cellSize = 8
