@@ -1,10 +1,38 @@
 <template>
   <v-card class="mt-4">
-    <v-card-title>
+    <v-card-title class="d-flex align-center">
       <v-icon class="mr-2">mdi-chart-line</v-icon>
       Population Evolution
+      <v-spacer />
+      <div class="d-flex align-center" style="width: 500px;">
+        <v-slider
+          v-model="maxDataPoints"
+          :min="50"
+          :max="5000"
+          :step="50"
+          color="primary"
+          label="Max Generations"
+          density="compact"
+          hide-details
+          class="mr-3"
+        >
+          <template v-slot:append>
+            <v-text-field
+              v-model.number="maxDataPoints"
+              :min="200"
+              :max="1000"
+              type="number"
+              style="width: 96px"
+              density="compact"
+              variant="outlined"
+              hide-details
+            />
+          </template>
+        </v-slider>
+      </div>
     </v-card-title>
     <v-card-text>
+      
       <div class="chart-container">
         <Line
           :data="chartData"
@@ -78,7 +106,7 @@ const props = defineProps<Props>()
 // Population tracking - use plain array to avoid reactivity issues
 let populationData: number[] = []
 const populationHistory = ref<number[]>([])
-const maxDataPoints = 200
+const maxDataPoints = ref(200)
 const lastGeneration = ref(-1)
 
 // Computed properties
@@ -197,7 +225,7 @@ const addDataPoint = (generation: number, population: number) => {
     // New generation or first time
     populationData.push(population)
     
-    if (populationData.length > maxDataPoints) {
+    if (populationData.length > maxDataPoints.value) {
       populationData.shift()
     }
   }
@@ -211,6 +239,15 @@ const addDataPoint = (generation: number, population: number) => {
 watch(() => [props.generation, props.liveCellCount], ([gen, pop]) => {
   addDataPoint(gen, pop)
 }, { immediate: true })
+
+// Watch maxDataPoints changes to trim existing data if needed
+watch(maxDataPoints, (newMax) => {
+  if (populationData.length > newMax) {
+    const excess = populationData.length - newMax
+    populationData.splice(0, excess)
+    populationHistory.value = [...populationData]
+  }
+})
 
 // Clear chart data
 const clearChart = () => {
