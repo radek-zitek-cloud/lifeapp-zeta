@@ -119,11 +119,19 @@
         </div>
       </v-card-text>
     </v-card>
+
+    <population-chart
+      :live-cell-count="liveCellCount"
+      :generation="generation"
+      :is-running="isRunning"
+      ref="populationChart"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import PopulationChart from './PopulationChart.vue'
 
 // Game state
 const cellSize = 8
@@ -137,6 +145,7 @@ const gridWidth = ref(64)
 const gridHeight = ref(64)
 const canvas = ref<HTMLCanvasElement>()
 const gridContainer = ref<HTMLDivElement>()
+const populationChart = ref<InstanceType<typeof PopulationChart>>()
 
 // Animation frame and interval
 let intervalId: number | null = null
@@ -163,6 +172,7 @@ const resetGrid = () => {
   if (isRunning.value) {
     toggleSimulation()
   }
+  populationChart.value?.clearChart()
   drawGrid()
 }
 
@@ -177,6 +187,7 @@ const randomizeGrid = () => {
   if (isRunning.value) {
     toggleSimulation()
   }
+  populationChart.value?.clearChart()
   drawGrid()
 }
 
@@ -201,6 +212,7 @@ const onGridSizeChange = () => {
   }
   
   generation.value = 0
+  populationChart.value?.clearChart()
   drawGrid()
 }
 

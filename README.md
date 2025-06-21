@@ -8,6 +8,7 @@ A modern implementation of Conway's Game of Life built with Vue.js 3, TypeScript
 - **Dynamic Grid Controls**: Separate sliders for width and height adjustment
 - **Interactive Cell Editing**: Click cells to toggle their state
 - **Real-time Simulation**: Watch the cellular automata evolve
+- **Population Chart**: Live visualization of cell population over time
 - **Adjustable Speed**: Control simulation speed from 50ms to 1000ms intervals
 - **Step-by-Step Mode**: Manual step-through for detailed observation
 - **Random Generation**: Generate random starting patterns
@@ -64,12 +65,16 @@ A modern implementation of Conway's Game of Life built with Vue.js 3, TypeScript
 6. **Grid Size**: Adjust the width and height of the grid independently (10-128 cells)
 7. **Interactive Editing**: Click any cell to toggle its state
 8. **Grid Info**: Monitor the current grid dimensions and live cell count
+9. **Population Chart**: Watch the real-time population evolution graph below the grid
+10. **Clear Chart**: Reset the population tracking history
 
 ## Technologies Used
 
 - **Vue.js 3** - Progressive JavaScript framework
 - **TypeScript** - Static type checking
 - **Vuetify 3** - Material Design component library
+- **Chart.js** - Interactive charting library for population visualization
+- **Vue Chart.js** - Vue.js wrapper for Chart.js
 - **Vite** - Fast build tool and development server
 - **HTML5 Canvas** - High-performance grid rendering
 
