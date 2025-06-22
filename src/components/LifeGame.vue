@@ -320,7 +320,7 @@ const updateGrid = () => {
 
 // Parse birth/survival rule string into array of numbers
 const parseBirthSurvivalRule = (rule: string): number[] => {
-  return rule.split('').map(char => parseInt(char)).filter(num => !isNaN(num) && num >= 0 && num <= 8)
+  return rule.split('').map(char => parseInt(char, 10)).filter(num => !isNaN(num) && num >= 0 && num <= 8)
 }
 
 // Validate rule input
