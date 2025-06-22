@@ -325,7 +325,6 @@ const parseBirthSurvivalRule = (rule: string): number[] => {
 
 // Validate rule input
 const validateRule = (value: string): boolean | string => {
-  if (!value) return 'Rule must contain at least one digit'
   if (!/^[0-8]*$/.test(value)) return 'Rule must contain only digits 0-8'
   return true
 }
