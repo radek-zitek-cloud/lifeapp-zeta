@@ -102,6 +102,52 @@
             </v-chip>
           </v-col>
         </v-row>
+
+        <v-row align="center" class="mb-3">
+          <v-col cols="12" sm="6" md="4">
+            <v-text-field
+              v-model="birthRule"
+              label="Birth Rule (B)"
+              prepend-icon="mdi-plus-circle"
+              placeholder="3"
+              hint="Neighbors needed for birth (e.g., '3' or '24')"
+              persistent-hint
+              density="compact"
+              :disabled="isRunning"
+              :rules="[validateRule]"
+            />
+          </v-col>
+          <v-col cols="12" sm="6" md="4">
+            <v-text-field
+              v-model="survivalRule"
+              label="Survival Rule (S)"
+              prepend-icon="mdi-heart"
+              placeholder="23"
+              hint="Neighbors needed for survival (e.g., '23' or '135')"
+              persistent-hint
+              density="compact"
+              :disabled="isRunning"
+              :rules="[validateRule]"
+            />
+          </v-col>
+          <v-col cols="auto">
+            <v-chip color="purple" variant="outlined">
+              Rule: B{{ birthRule }}/S{{ survivalRule }}
+            </v-chip>
+          </v-col>
+          <v-col cols="auto">
+            <v-btn
+              color="secondary"
+              size="small"
+              prepend-icon="mdi-restore"
+              @click="resetToConwayRules"
+              :disabled="isRunning"
+              variant="outlined"
+            >
+              Conway
+            </v-btn>
+          </v-col>
+        </v-row>
       </v-card-text>
     </v-card>
 
@@ -152,6 +198,8 @@ const generation = ref(0)
 const speed = ref(200)
 const gridWidth = ref(64)
 const gridHeight = ref(64)
+const birthRule = ref('3')
+const survivalRule = ref('23')
 const canvas = ref<HTMLCanvasElement>()
 const gridContainer = ref<HTMLDivElement>()
 const populationChart = ref<InstanceType<typeof PopulationChart>>()
@@ -241,22 +289,25 @@ const countNeighbors = (row: number, col: number): number => {
   return count
 }
 
-// Apply Conway's Game of Life rules
+// Apply Conway's Game of Life rules (configurable)
 const updateGrid = () => {
   const newGrid = initializeGrid()
+  
+  // Parse birth and survival rules
+  const birthNumbers = parseBirthSurvivalRule(birthRule.value)
+  const survivalNumbers = parseBirthSurvivalRule(survivalRule.value)
   
   for (let i = 0; i < gridHeight.value; i++) {
     for (let j = 0; j < gridWidth.value; j++) {
       const neighbors = countNeighbors(i, j)
       const isAlive = grid.value[i][j]
       
-      // Conway's rules:
-      // 1. Live cell with 2-3 neighbors survives
-      // 2. Dead cell with exactly 3 neighbors becomes alive
-      // 3. All other cells die or stay dead
-      if (isAlive && (neighbors === 2 || neighbors === 3)) {
+      // Apply configurable rules:
+      // 1. Live cell survives if neighbor count is in survival rule
+      // 2. Dead cell is born if neighbor count is in birth rule
+      if (isAlive && survivalNumbers.includes(neighbors)) {
         newGrid[i][j] = true
-      } else if (!isAlive && neighbors === 3) {
+      } else if (!isAlive && birthNumbers.includes(neighbors)) {
         newGrid[i][j] = true
       }
     }
@@ -265,6 +316,24 @@ const updateGrid = () => {
   grid.value = newGrid
   generation.value++
   drawGrid()
+}
+
+// Parse birth/survival rule string into array of numbers
+const parseBirthSurvivalRule = (rule: string): number[] => {
+  return rule.split('').map(char => parseInt(char, 10)).filter(num => !isNaN(num) && num >= 0 && num <= 8)
+}
+
+// Validate rule input
+const validateRule = (value: string): boolean | string => {
+  if (!value) return 'Rule must contain at least one digit'
+  if (!/^[0-8]*$/.test(value)) return 'Rule must contain only digits 0-8'
+  return true
+}
+
+// Reset to Conway's original rules
+const resetToConwayRules = () => {
+  birthRule.value = '3'
+  survivalRule.value = '23'
 }
 
 // Step forward one generation
